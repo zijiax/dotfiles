@@ -34,6 +34,11 @@ Plug 'majutsushi/tagbar'
 
 " YouCompleteMe
 Plug 'valloric/youcompleteme'
+" Without ycm_clangd_binary_path, YCM will use its own bundled clangd,
+" the following two lines make YCM use either the system clangd or
+" homebrew clangd
+"let g:ycm_clangd_binary_path = exepath("clangd")
+"let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
 " Let clangd fully control code completion
 let g:ycm_clangd_uses_ycmd_caching = 0
 " Make YouCompleteMe use ctags as well
@@ -52,7 +57,10 @@ let g:airline#extensions#searchcount#enabled = 0
 let g:airline_powerline_fonts = 1
 
 function! AirlineInit()
-    let g:airline_section_a = airline#section#create_left(['crypt', 'paste', 'keymap', 'spell', 'capslock', 'xkblayout', 'iminsert'])
+        let g:airline_section_a = airline#section#create_left([
+                \ 'crypt', 'paste', 'keymap', 'spell', 'capslock', 'xkblayout',
+                \ 'iminsert'
+                \ ])
 endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 
@@ -73,25 +81,30 @@ if &diff
         colorscheme apprentice
 endif
 
-" Don't wrap long lines
-set nowrap
-" Show a better line wrap
-set showbreak=↪
+set hlsearch
+" Don't move the cursor to the matched string
+set noincsearch
+" Don't show search count message when searching
+set shortmess+=S
 
-set sidescroll=1
+" If a pattern contains an uppercase letter, it is case sensitive, otherwise,
+" it is not
+set ignorecase
+set smartcase
 
-" Display line numbers
-set number
+" To ALWAYS use the clipboard for ALL operations (instead of interacting with
+" the '+' and/or '*' registers explicitly)
+set clipboard+=unnamed
 
 " Show current mode
 set showmode
-
 " Highlight current line
 set cursorline
-
-" To ALWAYS use the clipboard for ALL operations (instead of
-" interacting with the '+' and/or '*' registers explicitly)
-set clipboard+=unnamed
+" Display line numbers
+set number
+" Turn hybrid line numbers on
+set nu rnu
+set number relativenumber
 
 " Tab and indent related
 set autoindent
@@ -101,27 +114,22 @@ set smartindent
 set smarttab
 set softtabstop=4
 
-" If a pattern contains an uppercase letter, it is case sensitive,
-" otherwise, it is not
-set ignorecase
-set smartcase
+" Don't wrap long lines
+set nowrap
+set sidescroll=1
 
-set hlsearch
-" Don't move the cursor to the matched string
-set noincsearch
-" Don't show search count message when searching
-set shortmess+=S
+" Show a better line wrap
+set showbreak=↪
 
-" Turn hybrid line numbers on
-set nu rnu
-set number relativenumber
+" Make the Backspace/delete key work in macOS
+set backspace=2
 
 set wildignore+=*/tmp/*,*.so,*.swp
 
 syntax on
 
-" Search mappings: These will make it so that going to the next one
-" in a search will center on the line it's found in
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in
 "nnoremap * *zz
 "nnoremap N Nzz
 "nnoremap n nzz
@@ -132,15 +140,15 @@ syntax on
 "let &t_EI = \"\<Esc>]50;CursorShape=0\x7"
 
 " For Windows Terminal in Windows, change cursor shape in different modes
-if &term =~ '^xterm'
-  " solid underscore
-  let &t_SI .= "\<Esc>[3 q"
-  " solid block
-  let &t_EI .= "\<Esc>[1 q"
-  " 1 or 0 -> blinking block
-  " 3 -> blinking underscore
-  " Recent versions of xterm (282 or above) also support
-  " 5 -> blinking vertical bar
-  " 6 -> solid vertical bar
-endif
+"if &term =~ '^xterm'
+        " solid underscore
+        "let &t_SI .= \"\<Esc>[3 q"
+        " solid block
+        "let &t_EI .= \"\<Esc>[1 q"
+        " 1 or 0 -> blinking block
+        " 3 -> blinking underscore
+        " Recent versions of xterm (282 or above) also support
+        " 5 -> blinking vertical bar
+        " 6 -> solid vertical bar
+"endif
 
